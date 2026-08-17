@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f4f9; 
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; box-sizing: border-box;
+        }
+        
+        .container {
+            text-align: center; 
+            background: #ffffff; 
+            padding: 40px;
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%; 
+            max-width: 500px; 
+            box-sizing: border-box;
+        }
+        
+        h1 { 
+            margin-top: 0; color: #333; margin-bottom: 30px; font-size: 26px; 
+        }
+        
+        .btn-group { 
+            display: flex; gap: 20px; justify-content: center; 
+        }
+        
+        .btn {
+            display: inline-block; background-color: #007BFF; color: white;
+            text-decoration: none; padding: 15px 25px; border-radius: 6px;
+            font-size: 18px; font-weight: bold;
+            transition: background-color 0.2s, transform 0.1s;
+            flex: 1; /* Makes buttons equal width */
+            box-sizing: border-box;
+        }
+        
+        .btn:hover { 
+            background-color: #0056b3; transform: scale(1.02); 
+        }
+
+        /* 📱 MOBILE RESPONSIVE FIXES */
+        @media (max-width: 600px) {
+            .container { padding: 30px 20px; }
+            /* Stack the buttons vertically instead of side-by-side */
+            .btn-group { flex-direction: column; gap: 15px; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Select an Option</h1>
+        <div class="btn-group">
+            <!-- This links to the new placeholder page -->
+            <a href="{% url 'vraj_kha_h' %}" class="btn">Vraj kha h</a>
+            
+            <!-- This links to the form we built earlier -->
+            <a href="{% url 'vrajs_new_one' %}" class="btn">vraj's new one</a>
+        </div>
+    </div>
+
+</body>
+</html>

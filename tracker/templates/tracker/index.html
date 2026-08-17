@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Data</title>
+    <style>
+        :root {
+            --primary: #007BFF;
+            --primary-hover: #0056b3;
+            --bg-color: #f3f4f6;
+            --surface: #ffffff;
+            --text-main: #1f2937;
+            --border-color: #e5e7eb;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; padding: 40px 20px; 
+            display: flex; flex-direction: column; align-items: center; gap: 30px;
+            color: var(--text-main);
+        }
+
+        .card { 
+            background: var(--surface); padding: 35px 40px; width: 100%;
+            max-width: 800px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
+            box-sizing: border-box; /* Ensures padding doesn't push the card off screen */
+            overflow: hidden;
+        }
+
+        h2 { 
+            margin-top: 0; text-align: center; margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color); padding-bottom: 15px;
+        }
+
+        /* Form Styling */
+        .field-wrapper { display: flex; align-items: flex-start; margin-bottom: 20px; width: 100%; }
+        label { width: 140px; font-weight: 600; margin-right: 15px; text-align: right; padding-top: 8px; flex-shrink: 0; }
+        .input-group { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        
+        input, select, textarea { 
+            width: 100%; padding: 10px; border: 1px solid #ccc; 
+            border-radius: 4px; font-family: inherit; font-size: 14px; box-sizing: border-box;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); }
+
+        /* Inline Buttons for Dropdown */
+        .dropdown-flex-container { display: flex; gap: 10px; width: 100%; }
+        .btn-inline { width: auto; margin-top: 0; padding: 10px 15px; border: none; border-radius: 4px; font-weight: bold; color: white; cursor: pointer; white-space: nowrap; }
+        .btn-success { background-color: #28a745; }
+        .btn-success:hover { background-color: #218838; }
+        .btn-secondary { background-color: #6c757d; }
+        .btn-secondary:hover { background-color: #5a6268; }
+
+        /* Submit Button */
+        button[type="submit"] { background-color: var(--primary); color: white; padding: 14px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        button[type="submit"]:hover { background-color: var(--primary-hover); }
+        .error { color: #dc3545; font-size: 13px; width: 100%; margin-top: 5px; }
+
+        /* Table Styling */
+        .table-container { 
+            overflow-x: auto; width: 100%; 
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+            margin-bottom: 10px;
+        }
+        table { 
+            width: 100%; border-collapse: collapse; margin-top: 10px; 
+            min-width: 600px; /* Forces scrollbar instead of squishing columns */
+        }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { background-color: #f8fafc; font-weight: 600; text-transform: uppercase; color: var(--text-main); white-space: nowrap; }
+        tr:hover { background-color: #f1f5f9; }
+        .empty-message { text-align: center; color: #6b7280; font-style: italic; padding: 30px !important; }
+        
+        .back-link { display: inline-block; text-align: center; margin-top: 25px; color: var(--primary); text-decoration: none; font-weight: 600; width: 100%; }
+        .back-link:hover { text-decoration: underline; }
+
+        /* 📱 MOBILE RESPONSIVE FIXES */
+        @media (max-width: 600px) {
+            body { padding: 20px 10px; }
+            .card { padding: 25px 20px; border-radius: 8px; }
+            
+            /* Stack the label on top of the input */
+            .field-wrapper { flex-direction: column; align-items: flex-start; }
+            label { width: 100%; text-align: left; margin-bottom: 8px; padding-top: 0; }
+            
+            /* Stack the inline 'Add New' and 'Cancel' buttons below the input */
+            .dropdown-flex-container { flex-direction: column; }
+            .btn-inline { width: 100%; }
+            
+            /* Tighten table padding for smaller screens */
+            th, td { padding: 12px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- DATA ENTRY FORM -->
+<div class="card">
+    <h2>📝 Nya lafda</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="field-wrapper">
+            <label>Kha paya gya?</label>
+            <div class="input-group">
+                {{ form.some_text }}
+                {% if form.some_text.errors %}<div class="error">{{ form.some_text.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="field-wrapper">
+            <label>Kiske sath</label>
+            <div class="input-group">
+                <div id="dropdown-container" class="dropdown-flex-container">
+                    {{ form.category }} 
+                    <button type="button" id="show-text-btn" class="btn-inline btn-success">+ Add New</button>
+                </div>
+
+                <div id="textbox-container" class="dropdown-flex-container" style="display: none;">
+                    {{ form.new_option }}
+                    <button type="button" id="show-drop-btn" class="btn-inline btn-secondary">Cancel</button>
+                </div>
+                {% if form.category.errors %}<div class="error">{{ form.category.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="field-wrapper">
+            <label>kbse</label>
+            <div class="input-group">
+                {{ form.time_start }}
+                {% if form.time_start.errors %}<div class="error">{{ form.time_start.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="field-wrapper">
+            <label>kb tk</label>
+            <div class="input-group">
+                {{ form.time_stop }}
+                {% if form.time_stop.errors %}<div class="error">{{ form.time_stop.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="field-wrapper">
+            <label>kuch kehna chahenge aap?</label>
+            <div class="input-group">
+                {{ form.comments }}
+                {% if form.comments.errors %}<div class="error">{{ form.comments.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<!-- REAL-TIME DATABASE TABLE -->
+<div class="card">
+    <h2>🗄️ Recent Submissions</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Text</th>
+                    <th>Category</th>
+                    <th>Start Time</th>
+                    <th>Stop Time</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.some_text }}</td>
+                    <td>{{ entry.category }}</td>
+                    <td style="white-space: nowrap;">{{ entry.time_start|date:"M d, Y h:i A" }}</td>
+                    <td style="white-space: nowrap;">{{ entry.time_stop|date:"M d, Y h:i A" }}</td>
+                    <td>{{ entry.comments }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-message">No entries yet. Submit the form above to add one!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="text-align: center;">
+        <a href="{% url 'landing' %}" class="back-link">← Return to Main Menu</a>
+    </div>
+</div>
+
+<!-- JavaScript for Dropdown Toggle -->
+<script>
+    const dropdownContainer = document.getElementById('dropdown-container');
+    const textboxContainer = document.getElementById('textbox-container');
+    const showTextBtn = document.getElementById('show-text-btn');
+    const showDropBtn = document.getElementById('show-drop-btn');
+    const newOptionInput = document.querySelector('input[name="new_option"]');
+    const categorySelect = document.querySelector('select[name="category"]');
+
+    showTextBtn.addEventListener('click', () => {
+        dropdownContainer.style.display = 'none';
+        textboxContainer.style.display = 'flex';
+        categorySelect.value = '';
+    });
+
+    showDropBtn.addEventListener('click', () => {
+        textboxContainer.style.display = 'none';
+        dropdownContainer.style.display = 'flex';
+        newOptionInput.value = '';
+    });
+</script>
+
+</body>
+</html>

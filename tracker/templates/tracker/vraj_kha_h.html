@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Database Entries</title>
+    <style>
+        :root {
+            --primary: #007BFF;
+            --bg-color: #f3f4f6;
+            --surface: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-color); color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center; 
+            padding: 40px 20px;
+        }
+        
+        .card { 
+            background: var(--surface); padding: 35px 40px; width: 100%;
+            max-width: 900px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+            /* Prevents the card from expanding beyond the screen */
+            overflow: hidden; 
+        }
+        
+        h2 { 
+            font-size: 24px; text-align: center; margin-bottom: 25px;
+            padding-bottom: 15px; border-bottom: 2px solid var(--border-color);
+        }
+        
+        /* MOBILE SCROLL FIX */
+        .table-container { 
+            overflow-x: auto; 
+            width: 100%; 
+            -webkit-overflow-scrolling: touch; /* Makes scrolling butter-smooth on mobile */
+            margin-bottom: 10px;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            /* Forces the table to stay wide enough to read, triggering the scrollbar on mobile */
+            min-width: 650px; 
+        }
+        
+        th, td { 
+            padding: 14px 16px; 
+            text-align: left; 
+            border-bottom: 1px solid var(--border-color); 
+        }
+        
+        th { 
+            background-color: #f8fafc; font-weight: 600; font-size: 14px; 
+            text-transform: uppercase; white-space: nowrap; 
+        }
+        
+        tr:hover { background-color: #f1f5f9; }
+        .empty-message { text-align: center; color: var(--text-muted); font-style: italic; padding: 30px !important; }
+        .back-link { display: inline-block; margin-top: 25px; color: var(--primary); text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+
+        /* MOBILE ADJUSTMENTS: Shrinks spacing so it fits beautifully on tiny screens */
+        @media (max-width: 600px) {
+            body { padding: 20px 10px; }
+            .card { padding: 20px 15px; border-radius: 8px; }
+            h2 { font-size: 20px; margin-bottom: 15px; }
+            th, td { padding: 12px 10px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="card">
+        <h2>🗄️ Last time kha or 💋ke sath paya gya </h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <!-- FIXED TYPO HERE (added the closing slash) -->
+                        <th>Kis Mahila ke sath paya gya</th>
+                        <th>Origin</th>
+                        <th>Kbse</th>
+                        <th>Kb tk</th>
+                        <th>kuch vishesh shabd</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.some_text }}</td>
+                        <td>{{ record.category }}</td>
+                        <!-- Added nowrap to keep dates on a single readable line -->
+                        <td style="white-space: nowrap;">{{ record.time_start|date:"M d, Y h:i A" }}</td> 
+                        <td style="white-space: nowrap;">{{ record.time_stop|date:"M d, Y h:i A" }}</td>
+                        <td>{{ record.comments }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-message">Database is currently empty. Submit a log to create the first record!</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="{% url 'landing' %}" class="back-link">← Return to Main Menu</a>
+        </div>
+    </section>
+
+</body>
+</html>
